@@ -1,27 +1,26 @@
-import http from 'node:http';
+import { json } from '../middlewares/json.js';
+import express from 'express';
+
+const app = express();
 
 let users = [];
 
-const server = http.createServer((req, res) => {
-    const { method, url } = req;
-
-    if (method === 'GET' && url === '/users') {
-        return res
-            .setHeader('Content-type', 'application/json')
-            .end(JSON.stringify(users));
-    }
-
-    if (method === 'POST' && url === '/users') {
-        users.push({
-            id: 1,
-            name: 'John Doe',
-            email: 'JohnDoe@coldmail.com',
-        });
-        
-        return res.writeHead(201).end();
-    }
-
-    return res.writeHead(404).end();
+app.get('/users', async (req, res) => {
+    console.log(res);
+    return res.end();
 });
 
-server.listen(3333);
+app.post('/users', async (req, res) => {
+    console.log(req.body);
+    console.log(req.params);
+    const { name, email } = req.params;
+    users.push({
+        id: 1,
+        name: name,
+        email: email,
+    });
+    
+    return res.writeHead(201).end();
+});
+
+app.listen(3333);
